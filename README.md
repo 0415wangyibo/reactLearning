@@ -21,4 +21,46 @@
 2.1 vue框架入门 <a href="https://cn.vuejs.org/v2/guide" target="_blank">https://cn.vuejs.org/v2/guide</a>  
 2.2 ElementUi文档 <a href="https://element.eleme.cn/#/zh-CN/component/installation" target="_blank">https://element.eleme.cn/#/zh-CN/component/installation</a>  
 2.3 vuex <a href="https://vuex.vuejs.org/zh" target="_blank">https://vuex.vuejs.org/zh</a>  
+## III.antd常见问题及解决方法
+1. 表单自定义校验   
+* FormItem写法示例:  
+```javaScript
+     <FormItem label="编号">
+         {getFieldDecorator('no', {
+            rules: [
+            {
+              required: true,
+              message: '请输入编号',
+            }, {
+                // 自定义校验
+                validator: this.validateStatus,
+            }],
+            // 校验触发时机
+            validateTrigger: 'onBlur',
+         })(<Input placeholder="请输入编号"/>)}
+    </FormItem>
+```  
+* 校验方法中`callback()`必须每个条件分支都有返回结果，否则可能会导致非自定义校验在提交表单时校验失效：
+```javaScript
+validateStatus = (rule, value, callback) => {
+    const { dispatch } = this.props;
+    const newData = {};
+    if (value) {
+        newData.code = value;
+        dispatch({
+            type: 'checkSpace/checkCodeIfExist',
+            payload: newData,
+            callback: response => {
+                if (response.data) {
+                     callback('该编号已被占用');
+                } else {
+                     callback();
+                }
+            },
+        });
+    } else {
+        callback();
+    }
+}
+```
 
