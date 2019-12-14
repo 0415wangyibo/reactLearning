@@ -40,7 +40,7 @@
          })(<Input placeholder="请输入编号"/>)}
     </FormItem>
 ```  
-* 校验方法中`callback()`必须每个条件分支都有返回结果，否则可能会导致非自定义校验在提交表单时校验失效：
+* 校验方法中`callback()`必须每个条件分支都有返回结果，否则可能会导致校验在提交表单时失效：
 ```javaScript
 validateStatus = (rule, value, callback) => {
     const { dispatch } = this.props;
@@ -63,4 +63,25 @@ validateStatus = (rule, value, callback) => {
     }
 }
 ```
-
+2. 根据屏幕大小动态改变样式
+* `:global`改变全局样式,`@media`可以针对不同的屏幕尺寸设置不同的样式:
+```javaScript
+.workModal {
+    :global(.ant-modal-content) {
+      width: 200%;
+      margin-left: -30%;
+    }
+   @media screen and (max-width: 1253px) {
+     :global(.ant-modal-content) {
+       width: 180%;
+       margin-left: -30%;
+     }
+   }
+   @media screen and (max-width: 1060px) {
+     :global(.ant-modal-content) {
+       width: 150%;
+       margin-left: -20%;
+     }
+   }
+}
+```
