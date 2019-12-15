@@ -191,6 +191,16 @@ validateStatus = (rule, value, callback) => {
 ```javaScript
   @connect(({businessSpace, loading }) => ({
     businessSpace,
+    // 将loading在table等插件上引入即可
     loading: loading.effects['businessSpace/getInfoOne'] || loading.effects['businessSpace/getInfoTwo'],
   }))
+```
+9. 表格文字过长自动换行
+```javaScript
+  {
+     title: '名字',
+     dataIndex: 'name',
+     align: 'left',
+     render: text => <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</div>,
+  },
 ```
