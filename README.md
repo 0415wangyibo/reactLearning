@@ -85,3 +85,10 @@ validateStatus = (rule, value, callback) => {
    }
 }
 ```
+3. 使用变量动态计算样式
+* 下面是根据数值计算div的宽度：
+```javaScript
+ const dataString = ((area - total) / area) * 100;
+ const width = { width: `${dataString}%` };
+ const newDiv = <div style={{ float: 'left', ...width }}></div>;
+```
