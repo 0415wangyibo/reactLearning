@@ -154,3 +154,36 @@ validateStatus = (rule, value, callback) => {
         );
     }
 ```
+7. 百度地图(待完善)
+* 显示百度地图：
+```javaScript
+ setTimeout(() => {
+    this.map = new BMap.Map("smallMap");
+    let poi = new BMap.Point(108.952, 34.223);
+    this.map.centerAndZoom(poi, 15);
+    this.map.enableScrollWheelZoom();
+    this.map.addEventListener("click", e => {
+      let point = new BMap.Point(e.point.lng.toFixed(3), e.point.lat.toFixed(3)); 
+      //获取当前地理名称
+      let gc = new BMap.Geocoder();
+      let attendanceAddress = "";
+      gc.getLocation(point, rs => {
+         attendanceAddress = rs.address;
+         this.setState({
+           latitude: e.point.lng,
+           longitude: e.point.lat,
+           attendanceAddress: attendanceAddress
+         });
+      });
+    });
+ }, 100);
+```
+* 地图搜索：
+```javaScript
+  searchRange = value => {
+    const local = new BMap.LocalSearch(this.map, {
+      renderOptions: { map: this.map }
+    });
+    local.search(value);
+  };
+```
