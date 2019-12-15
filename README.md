@@ -99,5 +99,58 @@ validateStatus = (rule, value, callback) => {
    suffix="m&sup2;"
    onChange={e => this.partionSizeChange(e, partion)}
    type="number"
-   ></Input>
+ ></Input>
+```
+5. 表格禁止选择拥有某一属性的数据
+```javaScript
+ const rowSelection = {
+    selectedRowKeys,
+    onChange: this.onSelectChange,
+    // 设置选择框的默认属性
+    getCheckboxProps: record => ({
+       disabled: record.isGroup,
+    }),
+ };
+```
+6. 表格分页数据
+* state中page是当前页，从0开始，size是每页数据量，getList是查找列表数据的方法：
+```javaScript
+    handlePageChange = pagination => {
+        this.setState({
+            size: pagination.pageSize,
+            page: pagination.current - 1,
+        }, () => {
+            this.getList();
+        })
+    }
+
+    render() {
+        const {
+            businessData: { data, pageable },
+        } = this.props.businessSpace;
+        const pagination = {
+            // 分页相关信息，一共多少条，每页多少条数据，当前页
+            showTotal: () => (
+                <span style={{ marginRight: 15, fontSize: '14px' }}>
+                    共{<span style={{ color: '#0088FF' }}>{pageable.totalElements}</span>}条
+              </span>
+            ),
+            total: pageable.totalElements,
+            pageSize: pageable.size,
+            current: pageable.number + 1,
+            showSizeChanger: true,
+            showQuickJumper: true,
+        };
+        return (
+            <div>
+                <Table 
+                   columns={this.columns} 
+                   dataSource={data} 
+                   pagination={pagination} 
+                   onChange={this.handlePageChange} 
+                   rowKey="id"
+                ></Table>
+            </div>
+        );
+    }
 ```
