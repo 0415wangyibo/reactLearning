@@ -241,3 +241,43 @@ validateStatus = (rule, value, callback) => {
        placeholder="请选择" 
        onSelect={this.setTreeSelectData} />
 ```
+11. 对象转url中param的公共方法
+* 下面方法会将除了undefined以外的任何值都拼接在param中：
+```javaScript
+function bodyToParam(body, head, oldParam) {
+  let param = '';
+  let newHead = '';
+  if (head) {
+    newHead = head;
+  }
+  if (oldParam) {
+    param = oldParam;
+  }
+  if (undefined !== body) {
+    let flag = 0;
+    if (param) {
+      flag = 1;
+    }
+    // eslint-disable-next-line no-restricted-syntax
+    for (const i in body) {
+      if (undefined !== body[i]) {
+        if (flag === 0) {
+          if (body[i] instanceof Object) {
+            param = bodyToParam(body[i], `${newHead}${i}.`, param);
+          } else {
+            param = `?${newHead}${i}=${body[i]}`;
+          }
+          if (param) {
+            flag = 1;
+          }
+        } else if (body[i] instanceof Object) {
+            param = bodyToParam(body[i], `${newHead}${i}.`, param);
+          } else {
+            param = `${param}&${newHead}${i}=${body[i]}`;
+          }
+      }
+    }
+  }
+  return param;
+}
+```
