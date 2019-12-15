@@ -204,3 +204,40 @@ validateStatus = (rule, value, callback) => {
      render: text => <div style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>{text}</div>,
   },
 ```
+10. 树形选择器显示每一级的名字
+* 拼接树形数据方法：
+```javaScript
+    changeDataListToSelectData = (list, name) => {
+        if (list.length > 0) {
+            for (let i = 0; i < list.length; i += 1) {
+                list[i].value = list[i].id;
+                list[i].key = list[i].id;
+                list[i].title = list[i].name || list[i].floorNumber;
+                list[i].newValue = name !== '' ? `${name} / ${list[i].name || list[i].floorNumber}` : list[i].name || list[i].floorNumber;
+                if (list[i].children && list[i].children.length > 0) {
+                    this.changeDataListToSelectData(list[i].children, list[i].newValue);
+                }
+            }
+        }
+    }
+
+    setTreeSelectData = (value, obj) => {
+        this.setState({
+            treeValue: obj.props.newValue,
+        });
+    }
+```
+* 树形组件中使用：
+```javaScript
+    <TreeSelect 
+       // state中的值  
+       value={treeValue} 
+       // 树形组件数据   
+       treeData={treeData} 
+       // 配合showSearch按title进行搜索   
+       treeNodeFilterProp="title" 
+       treeDefaultExpandAll  
+       showSearch 
+       placeholder="请选择" 
+       onSelect={this.setTreeSelectData} />
+```
