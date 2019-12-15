@@ -187,3 +187,10 @@ validateStatus = (rule, value, callback) => {
     local.search(value);
   };
 ```
+8. 按需加载loading用法
+```javaScript
+  @connect(({businessSpace, loading }) => ({
+    businessSpace,
+    loading: loading.effects['businessSpace/getInfoOne'] || loading.effects['businessSpace/getInfoTwo'],
+  }))
+```
