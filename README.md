@@ -92,3 +92,12 @@ validateStatus = (rule, value, callback) => {
  const width = { width: `${dataString}%` };
  const newDiv = <div style={{ float: 'left', ...width }}></div>;
 ```
+4. 方法传递默认参数及自定义参数
+* 向方法`partionSizeChange`中传入默认参数`e`以及变量partion，方便在方法中进行处理：
+```javaScript
+ <Input
+   suffix="m&sup2;"
+   onChange={e => this.partionSizeChange(e, partion)}
+   type="number"
+   ></Input>
+```
