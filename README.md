@@ -281,3 +281,48 @@ function bodyToParam(body, head, oldParam) {
   return param;
 }
 ```
+12. 文件导出工具类
+```javaScript
+/*
+  文件导出公共方法
+  name：文件名，带后缀
+  oldurl：后端接口
+  method：请求方式，默认get
+*/
+function exportAsset(name, oldurl, method = 'get', body) {
+  const xhr = new XMLHttpRequest();
+  const formData = new FormData();
+  xhr.open(method, oldurl);
+  //  添加认证信息
+  xhr.setRequestHeader('authorization', sessionStorage.getItem('autnorization'));
+  xhr.responseType = 'blob';
+  xhr.onload = e => {
+    if (e.target.status === 200) {
+      const blob = e.target.response;
+      // 这里的名字，可以按后端给的接口固定表单设置一下名字，如（费用单.xlsx,合同.doc等等）
+      const filename = name;
+      if (window.navigator.msSaveOrOpenBlob) {
+        navigator.msSaveBlob(blob, filename);
+      } else {
+        const a = document.createElement('a');
+        const url = createObjectURL(blob);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    }
+  };
+  if (method === 'get') {
+    xhr.send(formData);
+  }
+  if (method === 'post') {
+    xhr.send(body);
+  }
+}
+
+function createObjectURL(obj) {
+  return window.URL ? window.URL.createObjectURL(obj) : window.webkitURL.createObjectURL(obj);
+}
+```
