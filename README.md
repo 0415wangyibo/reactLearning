@@ -326,3 +326,43 @@ function createObjectURL(obj) {
   return window.URL ? window.URL.createObjectURL(obj) : window.webkitURL.createObjectURL(obj);
 }
 ```
+13. 实现复制功能
+```javaScript
+   copyid = () => {
+      const e = document.getElementById('copy');
+      e.select();
+      const a = document.execCommand('Copy');
+      if (a === true) {
+         message.success('复制成功！');
+      }
+   }
+```
+14. 通过canvas生成图片并下载
+* `message`是生成二维码的依据，通过扫描生成的二维码可以再次获取到，同时可以向图片中添加所需文字`name`：
+```javaScript
+  import QRCode from 'qrcode.react';
+  import html2canvas from 'html2canvas';
+  <div id="image">
+   <QRCode id="qridOnlyOne" style={{ width: 100, height: 100 }} value={`${message}`} ></QRCode>
+        <div>{name}</div>
+  </div>
+  <Button type="default" onClick={this.exportImage}>下载图片</Button>
+
+  exportImage = () => {
+     const { name } = this.state;
+     html2canvas(document.getElementById('image'), {
+        scale: 3,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+    })
+      .then(canvas => {
+         const saveUrl = canvas.toDataURL('image/png');
+         const a = document.createElement('a');
+         document.body.appendChild(a);
+         a.href = saveUrl;
+         a.download = name;
+         a.click();
+      })
+  }
+```
