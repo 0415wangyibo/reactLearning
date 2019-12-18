@@ -366,3 +366,88 @@ function createObjectURL(obj) {
       })
   }
 ```
+15. 文件上传
+* 以图片上传为例：
+```javaScript
+    const getUploadProps = () => {
+      const uploadProps = {
+        name: 'file',
+        // url替换为具体的文件上传地址
+        action: url,
+        // 添加认证信息
+        headers: {
+          Authorization: sessionStorage.getItem('autnorization'),
+        },
+        // 文件类型筛选
+        accept: '.png,.jpg',
+        // 上传文件前进一步过滤
+        beforeUpload(file) {
+          if (file.size / 1024 > 2048) {
+            message.error('上传附件不得大于2MB!');
+            return false;
+          }
+          return true;
+        },
+        onChange(info) {
+          // 上传成功
+          if (info.file.status === 'done') {
+            message.success(`${info.file.name} 上传成功！`);
+            if (fileId) {
+              const value = { fileId };
+              deleteFile(value);
+            }
+            // 下面为方法处理上传成功后返回的数据
+            fileUpload(info);
+            // 上传失败
+          } else if (info.file.status === 'error') {
+            // 此处需要自己处理，全局拦截不到，如果不处理不显示提示信息
+            message.error(info.file.response.message);
+          }
+        },
+      };
+      return uploadProps;
+    };
+
+    <Upload
+       listType="picture-card"
+       showUploadList={false}
+       {...getUploadProps()}
+    >
+      {photourl ? (
+        <Fragment>
+          <img
+             src={photourl}
+             style={{ width: '100%', height: '100%' }}
+             alt="avatar"
+          />
+          <div className={styles.deleteIcon} onClick={() => this.showConfirm(item)}>
+            <Icon
+              style={{
+                border: 1,
+                marginLeft: -30,
+                marginTop: 16,
+                zIndex: 1,
+                width: 30,
+                height: 30,
+                float: 'left',
+               }}
+              type="delete"
+            />
+          </div>
+        </Fragment>) : 
+        (<div>
+          <Icon type={loading ? 'loading' : 'plus'} />
+          <div className="ant-upload-text">照片</div>
+         </div>
+        )}
+    </Upload>
+    // 样式
+    .deleteIcon {
+      opacity: 0;
+    }
+
+    .deleteIcon:hover {
+      opacity: 1;
+      cursor: pointer,
+    }
+```
