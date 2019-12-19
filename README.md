@@ -451,3 +451,67 @@ function createObjectURL(obj) {
       cursor: pointer,
     }
 ```
+16. 生成多个图片并以压缩包形式下载
+* 以在table中勾选表项进而生成图片压缩包为例，选择一条数据时不打包：
+```javaScript
+  import QRCode from 'qrcode.react';
+  import html2canvas from 'html2canvas';
+  import JSZip from 'jszip'
+  import FileSaver from 'file-saver'
+
+  batchDownload = () => {
+    const { selectedRows } = this.state;
+    if (selectedRows.length === 0) {
+      return
+    }
+    if (selectedRows.length === 1) {
+      this.dowloadQRcode(selectedRows[0].id, selectedRows[0]);
+      return
+    }
+    const zip = new JSZip();
+    const array = selectedRows.map(item => item.id);
+    for (let i = 0; i < array.length; i += 1) {
+      // eslint-disable-next-line no-loop-func
+      this.getBase64Image(array[i], dataURL => {
+        zip.file(`${selectedRows[i].name}.jpg`, dataURL.split(',')[1], { base64: true });
+        const ziplength = Object.keys(zip.files).length;
+        // 当所有图片都已经生成打包并保存zip
+        if (ziplength === array.length) {
+          zip.generateAsync({ type: 'blob' })
+            .then(content => {
+              FileSaver(content, '所选列表图片.zip');
+            });
+        }
+      })
+    }
+  }
+
+  getBase64Image = (images, callback) => {
+    html2canvas(document.getElementById(`image${images}`), {
+      scale: 3,
+      logging: false,
+      useCORS: true,
+      allowTaint: true,
+    }).then(canvas => {
+      // 使用canvas获取图片的base64数据
+      const dataURL = canvas.toDataURL();
+      callback(dataURL)
+    });
+  }
+
+   dowloadQRcode = (id, record) => {
+    html2canvas(document.getElementById(`image${id}`), {
+      scale: 3,
+      logging: false,
+      useCORS: true,
+      allowTaint: true,
+    }).then(canvas => {
+      const saveUrl = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.href = saveUrl;
+      a.download = record.name;
+      a.click();
+    });
+  }
+```
