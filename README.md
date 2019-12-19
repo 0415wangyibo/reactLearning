@@ -553,7 +553,6 @@ class Chart extends React.Component {
 
 
     initOption = () => {
-        // console.log("bbbbbbbbbbbbb",this.props.dataSource)
         // 校验参数合法性
         const dataNew = this.props.dataSource || {};
         const { xData, title, data, ySign } = dataNew;
