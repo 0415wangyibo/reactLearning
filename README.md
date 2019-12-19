@@ -281,7 +281,12 @@ function bodyToParam(body, head, oldParam) {
   return param;
 }
 ```
-12. 文件导出工具类
+12. react项目修改启动端口
+* 在`package.json`文件中进行修改：
+```javaScript
+  "start": "set PORT=8082&&umi dev",
+```
+13. 文件导出工具类
 ```javaScript
 /*
   文件导出公共方法
@@ -326,7 +331,7 @@ function createObjectURL(obj) {
   return window.URL ? window.URL.createObjectURL(obj) : window.webkitURL.createObjectURL(obj);
 }
 ```
-13. 实现复制功能
+14. 实现复制功能
 ```javaScript
    copyid = () => {
       const e = document.getElementById('copy');
@@ -337,7 +342,7 @@ function createObjectURL(obj) {
       }
    }
 ```
-14. 通过canvas生成图片并下载
+15. 通过canvas生成图片并下载
 * `message`是生成二维码的依据，通过扫描生成的二维码可以再次获取到，同时可以向图片中添加所需文字`name`：
 ```javaScript
   import QRCode from 'qrcode.react';
@@ -366,7 +371,7 @@ function createObjectURL(obj) {
       })
   }
 ```
-15. 文件上传
+16. 文件上传
 * 以图片上传为例：
 ```javaScript
     const getUploadProps = () => {
@@ -451,7 +456,7 @@ function createObjectURL(obj) {
       cursor: pointer,
     }
 ```
-16. 生成多个图片并以压缩包形式下载
+17. 生成多个图片并以压缩包形式下载
 * 以在table中勾选表项进而生成图片压缩包为例，选择一条数据时不打包：
 ```javaScript
   import QRCode from 'qrcode.react';
@@ -515,7 +520,7 @@ function createObjectURL(obj) {
     });
   }
 ```
-17. react集成echarts示例
+18. react集成echarts示例
 ```javaScript
 import React from 'react';
 import echarts from 'echarts';
